@@ -1,11 +1,43 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator, createAppContainer} from 'react-navigation'
 
 import LoginScreen from './screens/LoginScreen'
 import HomeScreen from './screens/HomeScreen'
 import createAccount from './screens/createAccount'
+import MapScreen from './screens/MapScreen'
+import * as firebase from "firebase";  
+
+
+
+const config = {  
+  apiKey: "AIzaSyBRXCuY9SBKMcEnpyNxA0sm8P0cMFVSGF8",
+  authDomain: "mealshare-a45fd.firebaseapp.com",
+  databaseURL: "https://mealshare-a45fd.firebaseio.com",
+  projectId: "mealshare-a45fd",
+  storageBucket: "mealshare-a45fd.appspot.com",
+  messagingSenderId: "996722584901"  
+};  
+
+firebase.initializeApp(config);
+
+
+
+
+
+
+
+const AppStackNavigator = createStackNavigator({
+MapScreen: MapScreen,
+LoginScreen: LoginScreen,
+HomeScreen: HomeScreen,
+createAccount: createAccount
+
+},
+{
+    initialRouteName: "MapScreen"
+});
 
 
 export default class App extends React.Component {
@@ -18,22 +50,12 @@ export default class App extends React.Component {
   }
 
   render() {
-
-        return <AppStackNavigator/>
+        const Rootnavigator = createAppContainer(AppStackNavigator);
+        return <Rootnavigator/>
 
     }
   }
 
-
-
-const AppStackNavigator = createStackNavigator({
-LoginScreen: LoginScreen,
-HomeScreen: HomeScreen,
-createAccount: createAccount,
-},
-{
-    initialRouteName: "LoginScreen"
-});
 
 const styles = StyleSheet.create({
   container: {

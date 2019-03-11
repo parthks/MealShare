@@ -2,7 +2,9 @@ import React, {Fragment} from 'react';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInput } from 'react-native-gesture-handler';
 import { ImagePicker, Permissions, LinearGradient } from 'expo';
-import { AsyncStorage, Image, ScrollView, StyleSheet, Text, View, Button, KeyboardAvoidingView, TouchableHighlight } from 'react-native';
+import { AsyncStorage, Image, ScrollView, StyleSheet, Text, View, Button, KeyboardAvoidingView, TouchableHighlight, Platform } from 'react-native';
+import * as firebase from "firebase";  
+
 
 
 
@@ -10,7 +12,7 @@ const initialState = {
   family_name: '', password: '', email: '', picture:'', showConfirmationForm: false
 }
 
-export default class HomeScreen extends React.Component {
+export default class createAccount extends React.Component {
   state = initialState
 
   onChangeText = (key, val) => {
@@ -41,6 +43,8 @@ export default class HomeScreen extends React.Component {
       });
       if (!result.cancelled) {
         this.onChangeText('picture', result.uri)
+        
+
       } else {
         console.log(TAG, `image selection cancelled\n`);
       }
@@ -50,7 +54,66 @@ export default class HomeScreen extends React.Component {
       alert("Man homes this wack")
     }
   };
+  
+  uploadFirebaseImage = async (uri) => {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+  
+    const ref = firebase
+      .storage()
+      .ref()
+      .child(firebase.auth().currentUser.uid);
+    const snapshot = await ref.put(blob);
+  
+    // We're done with the blob, close and release it
+    blob.close();
+  
+    return await snapshot.ref.getDownloadURL();
+  }
+//  uploadFirebaseImage(uri, mime = 'application/octet-stream') {
+//     return new Promise((resolve, reject) => {
+//       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+//       let uploadBlob = null
 
+//       const imageRef = firebase.storage().ref('images').child(firebase.auth().currentUser.uid)
+//       const Blob = RNFetchBlob.polyfill.Blob
+//       const fs = RNFetchBlob.fs
+//       window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+//       window.Blob = Blob
+
+//       fs.readFile(uploadUri, 'base64')
+//         .then((data) => {
+//           return Blob.build(data, { type: `${mime};BASE64` })
+//         })
+//         .then((blob) => {
+//           uploadBlob = blob
+//           return imageRef.put(blob, { contentType: mime })
+//         })
+//         .then(() => {
+//           uploadBlob.close()
+//           return imageRef.getDownloadURL()
+//         })
+//         .then((url) => {
+//           resolve(url)
+//         })
+//         .catch((error) => {
+//           reject(error)
+//       })
+//     })
+//   }
   _uploadImage = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status === 'granted') {
@@ -63,7 +126,9 @@ export default class HomeScreen extends React.Component {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
       });
       if (!result.cancelled) {
-        this.onChangeText('picture', result.uri)
+        this.onChangeText('picture', result.uri);
+        
+
       } else {
         console.log(TAG, `image selection cancelled\n`);
       }
@@ -75,77 +140,77 @@ export default class HomeScreen extends React.Component {
   };
 
   signUp = async () => {
-    const { family_name, username, email, password, phone_number, picture} = this.state
+    const { family_name, email, password, phone_number, picture} = this.state
     try {
-      const success = await Auth.signUp({ family_name, username, password, email, phone_number, attributes: { family_name, email, phone_number, picture }})
-      console.log('user successfully signed up!: ', success)
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          // If you need to do anything with the user, do it here
+          // The user will be logged in automatically by the
+          // `onAuthStateChanged` listener we set up in App.js earlier
+          //alert('registered')
+          //firebase.database.ref('users/').set({email: family_name});
+          alert("created accounts you fuck");
+          this.uploadFirebaseImage(this.state.picture)
+            .then(url => { 
+              alert('uploaded'); 
+
+              firebase.database().ref('users/').push({
+                email,
+                family_name,
+                url, 
+                phone_number
+            }).then((data)=>{
+                //success callback
+                alert("in data");
+    
+                console.log('data ' , data)
+    
+            }).catch((error)=>{
+                //error callback
+                
+                console.log('error ' , error)
+            })
+            })
+            .catch(error => console.log(error))
+          
+
+        })
+        .catch((error) => {
+          const { code, message } = error;
+          console.log(error)
+          alert(message)
+          // For details of error codes, see the docs
+          // The message contains the default Firebase string
+          // representation of the error
+        });
+        
+      //console.log('user successfully signed up!: ', success)
       this.setState({ showConfirmationForm: true })
 
-      let apiName = 'SafeNightAPI';
-      let path = '/account/create';
-
-      let myInit = {
-          body: {
-            "username": username,
-            "family_name": family_name,
-            "email": email,
-            "phone_number": phone_number,
-            "picture": username
-          },
-      }
-
-      API.post(apiName, path, myInit)
-        .then(response => {
-          console.log("No Errors!\n\n\n");
-          console.log(response);
-        }).catch(error => {
-          console.log("Ran into Errors! :(\n\n\n");
-          console.log(error.response)
-        });
+      
 
       // await AsyncStorage.setItem('Username', username);
       // await AsyncStorage.setItem('Password', password);
 
-      _storeData = async () => {
-        try {
-          await AsyncStorage.setItem('Username', username);
-          await AsyncStorage.setItem('Password', password);
-        } catch (error) {
-          // Error saving data
-        }
-      }
+      // _storeData = async () => {
+      //   try {
+      //     await AsyncStorage.setItem('Username', username);
+      //     await AsyncStorage.setItem('Password', password);
+      //   } catch (error) {
+      //     // Error saving data
+      //   }
+      // }
 
-      _storeData();
+      //_storeData();
 
-      fetch('http://34.229.10.70:3001/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username }),
-        })
+      
 
         const file = {
           // `uri` can also be a file system path (i.e. file://)
           uri: picture,
-          name: username,
+          //name: username,
           type: "image/jpg"
         }
-
-        const options = {
-          keyPrefix: "uploads/",
-          bucket: "safenight-bucket",
-          region: "us-east-1",
-          accessKey: "AKIAJZWABVONGSRDMRFA",
-          secretKey: "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",
-          successActionStatus: 201
-        }
-
-        RNS3.put(file, options).then(response => {
-          if (response.status !== 201)
-            throw new Error("Failed to upload image to S3");
-          console.log(response.body);
-        });
 
     } catch (err) {
       console.log('error signing up: ', err)
@@ -157,19 +222,19 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  confirmSignUp = async () => {
-    const { username, authenticationCode } = this.state
-    try {
-      await Auth.confirmSignUp(username, authenticationCode)
-      console.log('successully signed up!')
-      alert('User signed up successfully!')
-      this.setState({ ...initialState })
-      this.props.navigation.navigate('HomeScreen')
-    } catch (err) {
-      console.log('error confirming signing up: ', err)
-      //this.props.navigation.navigate('HomeScreen')
-    }
-  }
+  // confirmSignUp = async () => {
+  //   const { username, authenticationCode } = this.state
+  //   try {
+  //     await Auth.confirmSignUp(username, authenticationCode)
+  //     console.log('successully signed up!')
+  //     alert('User signed up successfully!')
+  //     this.setState({ ...initialState })
+  //     this.props.navigation.navigate('HomeScreen')
+  //   } catch (err) {
+  //     console.log('error confirming signing up: ', err)
+  //     //this.props.navigation.navigate('HomeScreen')
+  //   }
+  // }
 
   render() {
     let { picture } = this.state;
@@ -233,7 +298,7 @@ export default class HomeScreen extends React.Component {
                   }}
                 />
 
-                <TextInput
+                {/* <TextInput
                   style={styles.inputFields}
                   placeholder="Username"
                   onChangeText={val => this.onChangeText('username', val)}
@@ -246,7 +311,7 @@ export default class HomeScreen extends React.Component {
                   ref={ input => {
                     this.inputs['two'] = input;
                   }}
-                />
+                /> */}
 
                 <TextInput
                   style={styles.inputFields}
@@ -314,7 +379,8 @@ export default class HomeScreen extends React.Component {
 
                 <TouchableHighlight
                   style={ styles.signupBTN }
-                  onPress = {this.signUp}
+                  onPress = {this.signUp
+                  }
                   >
                   <Text style={ styles.signupBTNtext }>Sign Up</Text>
                 </TouchableHighlight>
@@ -323,7 +389,7 @@ export default class HomeScreen extends React.Component {
 
             )}
 
-            { this.state.showConfirmationForm && (
+            {/* { this.state.showConfirmationForm && (
                 <Fragment>
                   <TextInput
                     style={styles.input}
@@ -337,7 +403,7 @@ export default class HomeScreen extends React.Component {
                     onPress={this.confirmSignUp}
                   />
                 </Fragment>
-              )}
+              )} */}
 
             <KeyboardSpacer/>
 

@@ -7,32 +7,16 @@ import { MonoText } from '../components/StyledText';
 import { createStackNavigator, createAppContainer, StackActions, NavigationActions } from 'react-navigation';
 
 
-
-//import { Google } from 'expo';
-
-//import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
-
-
 import * as firebase from "firebase";  
 
 
-const config = {  
-    apiKey: "AIzaSyBRXCuY9SBKMcEnpyNxA0sm8P0cMFVSGF8",
-    authDomain: "mealshare-a45fd.firebaseapp.com",
-    databaseURL: "https://mealshare-a45fd.firebaseio.com",
-    projectId: "mealshare-a45fd",
-    storageBucket: "mealshare-a45fd.appspot.com",
-    messagingSenderId: "996722584901"  
-};  
-
-firebase.initializeApp(config);
 
 
 
 const resetBackCreateAccount = StackActions.reset({
   index: 0, // <-- currect active route from actions array
   actions: [
-    NavigationActions.navigate({ routeName: 'HomeScreen' }),
+    NavigationActions.navigate({ routeName: 'LoginScreen' }),
   ],
 });
 
@@ -70,24 +54,25 @@ export default class LoginScreen extends React.Component {
     }
 
     onRegister() {
-      alert('register')
+      //alert('register')
       const { email, password } = this.state;
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          // If you need to do anything with the user, do it here
-          // The user will be logged in automatically by the
-          // `onAuthStateChanged` listener we set up in App.js earlier
-          alert('registered')
-          this.props.navigation.navigate('HomeScreen');
-        })
-        .catch((error) => {
-          const { code, message } = error;
-          console.log(error)
-          alert(message)
-          // For details of error codes, see the docs
-          // The message contains the default Firebase string
-          // representation of the error
-        });
+      this.props.navigation.navigate('createAccount');
+      // firebase.auth().createUserWithEmailAndPassword(email, password)
+      //   .then((user) => {
+      //     // If you need to do anything with the user, do it here
+      //     // The user will be logged in automatically by the
+      //     // `onAuthStateChanged` listener we set up in App.js earlier
+      //     alert('registered')
+      //     this.props.navigation.navigate('createAccount');
+      //   })
+      //   .catch((error) => {
+      //     const { code, message } = error;
+      //     console.log(error)
+      //     alert(message)
+      //     // For details of error codes, see the docs
+      //     // The message contains the default Firebase string
+      //     // representation of the error
+      //   });
     }
 
 
@@ -107,7 +92,10 @@ export default class LoginScreen extends React.Component {
 
   componentDidMount() {
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
-      alert(user.email)
+      if(user) {
+        this.props.navigation.navigate('HomeScreen');
+      }
+      //alert(user.email)
     });
   }
 
