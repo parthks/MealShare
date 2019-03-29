@@ -35,7 +35,7 @@ render() {
         <View>
             <TouchableHighlight
               style={ styles.hangryButton }
-              onPress={ () => this.props.navigation.navigate('mapScreen') }
+              onPress={ () => this.props.navigation.navigate('MapScreen') }
             >
               <Text style={ styles.ButtonText }>Hungry?</Text>
             </TouchableHighlight>
@@ -44,7 +44,7 @@ render() {
               style={ styles.moneyButton }
               onPress={ () => {alert("Contact us!");} }
             >
-              <Text style={ styles.ButtonText }>Make Money</Text>
+              <Text style={ styles.ButtonText }>Make Money!</Text>
             </TouchableHighlight>
 
         </View>
@@ -55,12 +55,18 @@ render() {
 }
 
 const styles = StyleSheet.create({
+    ButtonText: {
+        fontSize: 50,
+        color: "white"
+    },
     hangryButton: {
         width: '90%',
+        height: '45%',
         padding: 10,
         borderRadius: 10,
         marginTop: 15,
         marginBottom: 5,
+        marginLeft: 20,
         backgroundColor: '#A594F9',
         justifyContent: 'center',
         alignItems: 'center',
@@ -68,10 +74,12 @@ const styles = StyleSheet.create({
 
     moneyButton: {
         width: '90%',
+        height: '45%',
         padding: 10,
         borderRadius: 10,
         marginTop: 15,
         marginBottom: 5,
+        marginLeft: 20,
         backgroundColor: '#A594F9',
         justifyContent: 'center',
         alignItems: 'center',

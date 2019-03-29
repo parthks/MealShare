@@ -7,6 +7,8 @@ import LoginScreen from './screens/LoginScreen'
 import HomeScreen from './screens/HomeScreen'
 import createAccount from './screens/createAccount'
 import MapScreen from './screens/MapScreen'
+import foodList from './screens/foodList'
+import MessagingScreen from './screens/MessagingScreen'
 import * as firebase from "firebase";  
 
 
@@ -32,11 +34,13 @@ const AppStackNavigator = createStackNavigator({
 MapScreen: MapScreen,
 LoginScreen: LoginScreen,
 HomeScreen: HomeScreen,
-createAccount: createAccount
+createAccount: createAccount,
+foodList: foodList,
+MessagingScreen: MessagingScreen
 
 },
 {
-    initialRouteName: "MapScreen"
+    initialRouteName: "LoginScreen"
 });
 
 

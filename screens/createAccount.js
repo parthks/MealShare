@@ -51,7 +51,7 @@ export default class createAccount extends React.Component {
     } else {
       // show info to user
       console.log("This shit broke");
-      alert("Man homes this wack")
+      //alert("Man homes this wack")
     }
   };
   
@@ -135,7 +135,7 @@ export default class createAccount extends React.Component {
     } else {
       // show info to user
       console.log("This shit broke");
-      alert("Man homes this wack")
+      //alert("Man homes this wack")
     }
   };
 
@@ -149,10 +149,10 @@ export default class createAccount extends React.Component {
           // `onAuthStateChanged` listener we set up in App.js earlier
           //alert('registered')
           //firebase.database.ref('users/').set({email: family_name});
-          alert("created accounts you fuck");
+          //alert("created accounts you fuck");
           this.uploadFirebaseImage(this.state.picture)
             .then(url => { 
-              alert('uploaded'); 
+              //alert('uploaded'); 
 
               firebase.database().ref('users/').push({
                 email,
@@ -161,7 +161,7 @@ export default class createAccount extends React.Component {
                 phone_number
             }).then((data)=>{
                 //success callback
-                alert("in data");
+                //alert("in data");
     
                 console.log('data ' , data)
     
@@ -258,14 +258,14 @@ export default class createAccount extends React.Component {
          }}
       >
           <View style={styles.welcomeContainer}>
-            <Image
+            {/* <Image
               source={
                 __DEV__
                   ? require('../assets/images/logo.png')
                   : require('../assets/images/logo.png')
               }
               style={styles.welcomeImage}
-            />
+            /> */}
           </View>
           <ScrollView>
 
@@ -273,9 +273,6 @@ export default class createAccount extends React.Component {
             <View style={ styles.genInfo }>
               <Text style={styles.info}>
                 Passwords must longer than 6 characters, contain at least one numeric value, and one symbol
-              </Text>
-              <Text style={styles.info}>
-                Please start the phone number with +1
               </Text>
             </View>
 

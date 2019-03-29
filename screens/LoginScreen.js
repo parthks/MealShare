@@ -33,14 +33,14 @@ export default class LoginScreen extends React.Component {
   }
 
     onLogin() {
-        alert('login')
+        //alert('login')
       const { email, password } = this.state;
       firebase.auth().signInWithEmailAndPassword(email, password)
         .then((user) => {
           // If you need to do anything with the user, do it here
           // The user will be logged in automatically by the 
           // `onAuthStateChanged` listener we set up in App.js earlier
-          alert('logged in')
+          //alert('logged in')
           this.props.navigation.navigate('HomeScreen');
         })
         .catch((error) => {
@@ -121,14 +121,15 @@ export default class LoginScreen extends React.Component {
        }}
       >
             <View style={styles.welcomeContainer}>
-              <Image
+              {/* <Image
                 source={
                   __DEV__
                     ? require('../assets/images/logo.png')
                     : require('../assets/images/logo.png')
                 }
                 style={styles.welcomeImage}
-              />
+              /> */}
+              <Text style={styles.appName}>MealShare</Text>
             </View>
 
             <View style={styles.logInContainer}>
@@ -181,6 +182,10 @@ export default class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  appName: {
+    fontSize: 40,
+    color: '#6666FF',
+  },
   logPassInput: {
     height: 40,
     width: 200,
