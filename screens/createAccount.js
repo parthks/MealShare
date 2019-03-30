@@ -185,7 +185,7 @@ export default class createAccount extends React.Component {
         });
         
       //console.log('user successfully signed up!: ', success)
-      this.setState({ showConfirmationForm: true })
+      this.setState({ showConfirmationForm: false })
 
       
 
@@ -331,17 +331,17 @@ export default class createAccount extends React.Component {
                   placeholder="Password"
                   onChangeText={val => this.onChangeText('password', val)}
 
-                  blurOnSubmit={ false }
-                  onSubmitEditing={() => {
-                    this.focusNextField('five');
-                  }}
-                  returnKeyType={ "next" }
+                  blurOnSubmit={ true }
+                  // onSubmitEditing={() => {
+                  //   this.focusNextField('five');
+                  // }}
+                  returnKeyType={ "done" }
                   ref={ input => {
                     this.inputs['four'] = input;
                   }}
                 />
 
-                <TextInput
+                {/* <TextInput
                   style={styles.inputFields}
                   placeholder="Phone Number"
                   //onChangeText={(text) => {this.setState({text})}}
@@ -352,13 +352,13 @@ export default class createAccount extends React.Component {
                   ref={ input => {
                     this.inputs['five'] = input;
                   }}
-                />
+                /> */}
 
                 <TouchableHighlight
                   style={ styles.defaultBTN }
                   onPress={this._pickImage}
                   >
-                  <Text style={ styles.defaultBTNtext }>Take a photo and upload it</Text>
+                  <Text style={ styles.defaultBTNtext }>Take a photo and upload</Text>
                 </TouchableHighlight>
 
                 <Text style={ styles.or }>OR</Text>

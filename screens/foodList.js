@@ -1,6 +1,6 @@
 
 import React, { Fragment } from 'react';
-import { Platform, StatusBar, ScrollView, StyleSheet, View, Text, Button, TouchableHighlight } from 'react-native';
+import { Platform, StatusBar, ScrollView, StyleSheet, View, Text, Button, Image, TouchableHighlight } from 'react-native';
 import * as firebase from "firebase";
 import Chatkit from '@pusher/chatkit-client'
 
@@ -10,12 +10,21 @@ export default class foodList extends React.Component {
  
 static navigationOptions = ({navigation, screenProps }) => ({
     title: "Bri's Muffin Shop",
+    headerRight:
+          <Button
+            //onPress={(navigation) => navigation.navigate('HomeScreen') }
+            onPress={() => {}}
+            title="Seller Profile"
+            color="#0000FF"
+          />,
 });
  constructor(props) {
      super(props);
      this.params = this.props.navigation.state.params.id; 
      this.state = {
-         foods: [{name:'Chocolate Chip Muffin', price:'$3.00'}, {name:'Blueberry Muffin', price: '$3.00'}, {name: 'Plain Muffin', price: '$3.00'}],
+         foods: [{name:'Chocolate Chip Muffin', price:'$3.00', url: 'https://firebasestorage.googleapis.com/v0/b/mealshare-a45fd.appspot.com/o/chocolate-chip-muffins-ck.jpg?alt=media&token=103046c0-7e36-4ed7-9123-7c6d4aa03904'}, 
+         {name:'Blueberry Muffin', price: '$3.00', url: 'https://firebasestorage.googleapis.com/v0/b/mealshare-a45fd.appspot.com/o/Blueberry-Muffins-9-3.jpg?alt=media&token=685bad0f-a68f-420b-ac2a-f0810e312181'}, 
+         {name: 'Plain Muffin', price: '$3.00', url: 'https://firebasestorage.googleapis.com/v0/b/mealshare-a45fd.appspot.com/o/PlainMuffin.jpg?alt=media&token=23648653-fbd7-4b5c-bde9-0e14b1a427e7'}],
      }
  }
 
@@ -110,13 +119,20 @@ static navigationOptions = ({navigation, screenProps }) => ({
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          <View>
 
+            <Text style={styles.address}>Address: {"\n"}823 Dewey Ave. {"\n"}Ann Arbor, Michigan 48104{"\n"}</Text>
+          </View>
           <View>
           {
               this.state.foods.map((p) => {
                 return (
                     <React.Fragment>
                       <View style={styles.individual_pic_container}>
+                      <Image 
+                        style={{width: 300, height: 300}}
+                        source={{uri: p.url}}>
+                      </Image>
                         <TouchableHighlight
                           style={styles.logPassButton}
                           onPress={() => { this.joinChat(p.name) } }
@@ -141,6 +157,12 @@ static navigationOptions = ({navigation, screenProps }) => ({
 }
 
 const styles = StyleSheet.create({
+
+  address: {
+    textAlign: 'center',
+    fontSize: 30,
+
+  },
   container: {
     flex: 1,
     backgroundColor: '#d9d9d9',

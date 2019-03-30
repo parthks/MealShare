@@ -5,7 +5,7 @@
 
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
-import Chatkit from "@pusher/chatkit";
+import Chatkit from "@pusher/chatkit-client";
 import { KeyboardAvoidingView, View, Button, AsyncStorage } from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
@@ -103,7 +103,7 @@ export default class MyChat extends React.Component {
         super(props);
         this.params = this.props.navigation.state.params;
 
-        CHATKIT_ROOM_ID = parseInt(this.params.roomId);
+        CHATKIT_ROOM_ID = (this.params.roomId);
         CHATKIT_USER_NAME = 'testuser';
 
     }
@@ -120,8 +120,12 @@ export default class MyChat extends React.Component {
         // 	instanceLocator: CHATKIT_INSTANCE_LOCATOR,
         // 	userId: CHATKIT_USER_NAME,
         // 	tokenProvider: tokenProvider
+
+        console.log("CURRENT USER IS THIS ESKETIT 1" );
+
         // });
         const chatManager = new Chatkit.ChatManager({
+            
             instanceLocator: 'v1:us1:75aeba04-a7ad-4d62-9d2d-ac937c8d2502',
             userId: 'testuser',
             tokenProvider: new Chatkit.TokenProvider({
@@ -129,28 +133,36 @@ export default class MyChat extends React.Component {
             }),
           })
 
+          console.log("CURRENT USER IS THIS ESKETIT 2");
+
+
         // In order to subscribe to the messages this user is receiving in this room, we need to `connect()` the `chatManager` and have a hook on `onNewMessage`. There are several other hooks that you can use for various scenarios. A comprehensive list can be found [here](https://docs.pusher.com/chatkit/reference/javascript#connection-hooks).
         chatManager.connect().then(currentUser => {
             this.currentUser = currentUser;
             CURRENTUSER = currentUser
-            this.currentUser.subscribeToRoom({
+            this.currentUser.subscribeToRoomMultipart({
                 roomId: CHATKIT_ROOM_ID,
                 hooks: {
-                    onNewMessage: this.onReceive.bind(this)
+                    onMessage: this.onReceive.bind(this)
                 }
             });
         });
     }
 
     onSend([message]) {
-        this.currentUser.sendMessage({
+        this.currentUser.sendSimpleMessage({
             text: message.text,
             roomId: CHATKIT_ROOM_ID
         });
     }
 
     onReceive(data) {
-        const { id, senderId, text, createdAt } = data;
+        const { id, senderId, parts, createdAt } = data;
+        console.log("INSIDE RECEIVE " + parts);
+        console.log("INSIDE RECEIVE " + parts[0].partType);
+        console.log("INSIDE RECEIVE " + parts[0].payload);
+        console.log("INSIDE RECEIVE " + parts[0].payload.content);
+
         // console.log("THIS IS THE DATA ATTACHMENT LINK " + data.attachment.link);
         // console.log("THIS IS THE DATA ATTACHMENT TYPE " + data.attachment.type);
         // console.log("THIS IS THE DATA ATTACHMENT NAME " + data.attachment.name);
@@ -162,7 +174,7 @@ export default class MyChat extends React.Component {
 
         const incomingMessage = {
             _id: id,
-            text: text,
+            text: parts[0].payload.content,
             image: attached,
             createdAt: new Date(createdAt),
             user: {

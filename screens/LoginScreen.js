@@ -129,7 +129,7 @@ export default class LoginScreen extends React.Component {
                 }
                 style={styles.welcomeImage}
               /> */}
-              <Text style={styles.appName}>MealShare</Text>
+              <Text style={styles.appName}>InstaSnack</Text>
             </View>
 
             <View style={styles.logInContainer}>
