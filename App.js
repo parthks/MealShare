@@ -2,7 +2,7 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import {createStackNavigator, createAppContainer} from 'react-navigation'
-
+//fuk this app
 import LoginScreen from './screens/LoginScreen'
 import HomeScreen from './screens/HomeScreen'
 import createAccount from './screens/createAccount'
