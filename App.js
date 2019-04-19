@@ -1,3 +1,7 @@
+// 'Orders' - to keep track of group chats
+// Each product info from firebase 
+// Make Money Section - sellers customize all data customers see 
+
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
@@ -9,6 +13,8 @@ import createAccount from './screens/createAccount'
 import MapScreen from './screens/MapScreen'
 import foodList from './screens/foodList'
 import MessagingScreen from './screens/MessagingScreen'
+import ProfileScreen from './screens/ProfileScreen'
+
 import * as firebase from "firebase";  
 
 
@@ -36,7 +42,8 @@ LoginScreen: LoginScreen,
 HomeScreen: HomeScreen,
 createAccount: createAccount,
 foodList: foodList,
-MessagingScreen: MessagingScreen
+MessagingScreen: MessagingScreen,
+ProfileScreen: ProfileScreen,
 
 },
 {

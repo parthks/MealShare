@@ -158,10 +158,10 @@ export default class MyChat extends React.Component {
 
     onReceive(data) {
         const { id, senderId, parts, createdAt } = data;
-        console.log("INSIDE RECEIVE " + parts);
-        console.log("INSIDE RECEIVE " + parts[0].partType);
-        console.log("INSIDE RECEIVE " + parts[0].payload);
-        console.log("INSIDE RECEIVE " + parts[0].payload.content);
+        // console.log("INSIDE RECEIVE " + parts);
+        // console.log("INSIDE RECEIVE " + parts[0].partType);
+        // console.log("INSIDE RECEIVE " + parts[0].payload);
+        // console.log("INSIDE RECEIVE " + parts[0].payload.content);
 
         // console.log("THIS IS THE DATA ATTACHMENT LINK " + data.attachment.link);
         // console.log("THIS IS THE DATA ATTACHMENT TYPE " + data.attachment.type);

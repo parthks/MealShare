@@ -34,14 +34,15 @@ export default class MapScreen extends React.Component {
             longitudeDelta: 0.0221,
           },
       
-          markers: [{
-              title: "Rohan's Popcorn",
-              description: 'sdfsd',
-              coordinates: {
-                latitude: 42.2658,
-                longitude: -83.7487
-              },
-            },
+          markers: [
+            // {
+            //   title: "Rohan's Popcorn",
+            //   description: 'sdfsd',
+            //   coordinates: {
+            //     latitude: 42.2658,
+            //     longitude: -83.7487
+            //   },
+            // },
             {
               title: "Bri's Muffin Shop",
               description: "Delicous Muffins",

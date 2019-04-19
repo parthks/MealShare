@@ -4,7 +4,9 @@ import { Platform, StatusBar, ScrollView, StyleSheet, View, Text, Button, Image,
 import * as firebase from "firebase";
 import Chatkit from '@pusher/chatkit-client'
 
-
+logOut = async (navigation) => {
+    navigation.navigate('ProfileScreen');
+}
 
 export default class foodList extends React.Component {
  
@@ -13,7 +15,7 @@ static navigationOptions = ({navigation, screenProps }) => ({
     headerRight:
           <Button
             //onPress={(navigation) => navigation.navigate('HomeScreen') }
-            onPress={() => {}}
+            onPress={() => {logOut(navigation)} }
             title="Seller Profile"
             color="#0000FF"
           />,
